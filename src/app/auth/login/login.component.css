@@ -1,0 +1,64 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px); /* desde abajo */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bg-left-image {
+    background-image: url('https://cdn5.dominicanasolidaria.org/wp-content/uploads/2019/03/portada-nph-1900x1063.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-left-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* fondo oscuro */
+}
+
+.text-overlay {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    animation: fadeIn 1s ease-out;
+}
+
+form {
+    animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+.button,
+.bg-indigo-600,
+.from-indigo-600,
+.to-purple-600 {
+    background-image: none !important;
+    border-color: #096dad !important;
+}
+
+.button:hover,
+.bg-indigo-700,
+.hover\:from-indigo-700:hover,
+.hover\:to-purple-700:hover {
+    background-color: #075b87 !important;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .min-h-screen {
+        flex-direction: column;
+    }
+    .bg-left-image {
+        display: none;
+    }
+}

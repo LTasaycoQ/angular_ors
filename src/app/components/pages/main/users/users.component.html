@@ -1,0 +1,164 @@
+<div class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Gestión de Usuarios</h1>
+        <div class="flex items-center space-x-4">
+            <!-- Barra de búsqueda -->
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-64 pl-10 p-2.5"
+                    placeholder="Buscar usuarios...">
+            </div>
+
+            <button *ngIf="isAdmin" (click)="openForm()"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Nuevo Usuario
+            </button>
+        </div>
+    </div>
+
+    <!-- Estado de carga -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-10">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"
+        roles="alert">
+        <span class="block sm:inline">{{ error }}</span>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div *ngIf="!isLoading && !error" class="bg-white shadow-md rounded-lg overflow-hidden max-w-screen-xl mx-auto p-4">
+        <div class="overflow-x-auto max-w-full">
+            <table class="w-full table-fixed divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
+                            Foto</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">
+                            Nombre</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">
+                            Documento</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
+                            Teléfono</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-48">
+                            Email</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
+                            Rol</th>
+                        <th
+                            class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
+                            Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr *ngFor="let user of filteredUsers" class="hover:bg-gray-50">
+                        <!-- Foto de perfil -->
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <img [src]="user.profileImage || 'https://via.placeholder.com/40'"
+                                alt="Foto de {{ user.name }} {{ user.lastName }}"
+                                class="h-10 w-10 rounded-full object-cover border border-gray-300" />
+                        </td>
+
+                        <!-- Nombre -->
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900 truncate" [title]="user.name">{{ user.name }}
+                            </div>
+                            <div class="text-sm text-gray-500 truncate" [title]="user.lastName">{{ user.lastName }}
+                            </div>
+                        </td>
+
+                        <!-- Documento -->
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 truncate" [title]="user.documentType">{{ user.documentType
+                                }}</div>
+                            <div class="text-sm text-gray-500 truncate" [title]="user.documentNumber">{{
+                                user.documentNumber }}</div>
+                        </td>
+
+                        <!-- Teléfono -->
+                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 truncate" [title]="user.cellPhone">
+                            {{ user.cellPhone }}
+                        </td>
+
+                        <!-- Email -->
+                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 truncate" [title]="user.email">
+                            {{ user.email }}
+                        </td>
+
+                        <!-- Rol -->
+                        <td class="px-4 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                [ngClass]="user.role[0] === 'ADMIN' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'">
+                                {{ user.role[0] === 'ADMIN' ? 'Administrador' : 'Usuario' }}
+                            </span>
+                        </td>
+
+                        <!-- Acciones -->
+                        <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end gap-3">
+                            <!-- Editar -->
+                            <button *ngIf="isAdmin" (click)="openForm(user)" title="Editar usuario"
+                                class="text-indigo-600 hover:text-indigo-900 transition-colors duration-200">
+                                <i class="fas fa-edit text-lg"></i>
+                            </button>
+
+                            <!-- Eliminar -->
+                            <button *ngIf="isAdmin" (click)="deleteUser(user.id!)" title="Eliminar usuario"
+                                class="text-red-600 hover:text-red-900 transition-colors duration-200">
+                                <i class="fas fa-trash-alt text-lg"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Fila si no hay usuarios -->
+                    <tr *ngIf="filteredUsers.length === 0">
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                            No hay usuarios registrados
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de formulario -->
+    <div *ngIf="isFormVisible" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">
+                        {{ isEditing ? 'Editar Usuario' : 'Nuevo Usuario' }}
+                    </h2>
+                    <button (click)="closeForm()" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Debug output to verify selectedUser data -->
+                <div *ngIf="selectedUser" class="hidden">
+                    Debug: {{selectedUser | json}}
+                </div>
+
+                <app-user-modal *ngIf="selectedUser" [user]="selectedUser" (formSubmit)="saveUser($event)"
+                    (formCancel)="closeForm()">
+                </app-user-modal>
+            </div>
+        </div>
+    </div>
+</div>

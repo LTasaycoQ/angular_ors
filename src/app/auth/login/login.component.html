@@ -1,0 +1,185 @@
+<div class="min-h-screen flex flex-col md:flex-row">
+    <!-- Left side - Image with overlay -->
+    <div class="hidden md:flex md:w-1/2 bg-left-image p-12">
+        <div class="text-overlay max-w-xl text-center">
+            <h1 class="text-4xl font-bold mb-6">Bienvenido a NPH</h1>
+            <p class="text-sm text-gray-200 leading-relaxed">
+                En <strong class="text-white">NPH</strong>, creamos oportunidades que cambian vidas,
+                apoyando a niños y jóvenes vulnerables para que construyan un futuro mejor.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- Right side - Login Form -->
+    <div class="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
+        <div class="w-full max-w-md">
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <div class="text-center mb-8">
+                    <div class="flex justify-center mb-8">
+                        <img src="https://i.ibb.co/JqmVCv1/logo.png" alt="Logo" class="h-16 w-auto" />
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800">Iniciar sesión</h2>
+                    <p class="text-gray-600 mt-2">Ingresa tus credenciales para acceder</p>
+                </div>
+
+                <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo
+                            electrónico</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                                </svg>
+                            </div>
+                            <input id="email" name="email" type="email" formControlName="email"
+                                class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out sm:text-sm"
+                                placeholder="correo@ejemplo.com" />
+                        </div>
+                        <div class="text-red-500 text-xs mt-1 min-h-[18px]">
+                            <ng-container *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+                                <div *ngIf="loginForm.get('email')?.errors?.['required']">El correo es obligatorio</div>
+                                <div *ngIf="loginForm.get('email')?.errors?.['email']">Ingrese un correo válido</div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <!-- Password -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                            <button type="button"
+                                class="text-sm font-medium text-[#096dad] hover:text-[#075b87] focus:outline-none"
+                                data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                                ¿Olvidaste tu contraseña?
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <input id="password" name="password" [type]="showPassword ? 'text' : 'password'"
+                                formControlName="password"
+                                class="appearance-none block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out sm:text-sm"
+                                placeholder="Contraseña" />
+                            <button type="button" (click)="togglePasswordVisibility()"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-[#096dad] focus:outline-none transition-colors duration-200 text-lg">
+
+                                <!-- Ojo abierto (contraseña oculta) -->
+                                <i *ngIf="!showPassword" class="fa-solid fa-eye"></i>
+
+                                <!-- Ojo tachado (contraseña visible) -->
+                                <i *ngIf="showPassword" class="fa-solid fa-eye-slash text-[#096dad]"></i>
+                            </button>
+
+                        </div>
+                        <div class="text-red-500 text-xs mt-1 min-h-[18px]">
+                            <ng-container
+                                *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+                                <div *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es
+                                    obligatoria</div>
+                                <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres</div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <!-- Botón login -->
+                    <div>
+                        <button type="submit" [disabled]="isLoading"
+                            class="button group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#096dad] hover:bg-[#075b87] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#096dad] transition duration-150 ease-in-out disabled:opacity-50 shadow-md">
+                            <span *ngIf="isLoading" class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                            </span>
+                            {{ isLoading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 🔐 Modal: Olvidaste tu contraseña -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-6 rounded-xl shadow-xl border-0">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Restablecer contraseña</h3>
+                <button type="button" class="text-gray-400 hover:text-gray-500" data-bs-dismiss="modal"
+                    aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <p class="text-gray-600 mb-4">Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu
+                contraseña.</p>
+
+            <form [formGroup]="forgotForm" (ngSubmit)="sendResetLink()">
+                <div class="mb-4">
+                    <label for="reset-email" class="block text-sm font-medium text-gray-700 mb-1">Correo
+                        electrónico</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                            </svg>
+                        </div>
+                        <input id="reset-email" type="email" formControlName="email"
+                            class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-[#096dad] focus:border-[#096dad] transition duration-150 ease-in-out sm:text-sm"
+                            placeholder="correo@ejemplo.com" />
+                    </div>
+                    <div *ngIf="forgotForm.get('email')?.touched && forgotForm.get('email')?.invalid"
+                        class="text-red-500 text-xs mt-1">
+                        <div *ngIf="forgotForm.get('email')?.errors?.['required']">El correo es obligatorio</div>
+                        <div *ngIf="forgotForm.get('email')?.errors?.['email']">Correo no válido</div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="closeModalBtn"
+                        class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition duration-150 ease-in-out"
+                        data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-[#096dad] hover:bg-[#075b87] text-white rounded-lg transition duration-150 ease-in-out shadow-md"
+                        [disabled]="isSending">
+                        <div class="flex items-center">
+                            <span *ngIf="isSending" class="mr-2">
+                                <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                            </span>
+                            {{ isSending ? 'Enviando...' : 'Enviar enlace' }}
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

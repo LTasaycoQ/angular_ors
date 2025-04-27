@@ -1,0 +1,206 @@
+<div class="container mx-auto p-4 max-w-4xl">
+    <!-- Header with back button -->
+    <div class="flex justify-between items-center mb-6">
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition flex items-center"
+            (click)="volverAlDashboard()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver al Dashboard
+        </button>
+
+        <h1 class="text-2xl font-bold text-gray-800">Configuración</h1>
+    </div>
+
+    <!-- Configuration Cards -->
+    <div class="grid grid-cols-1 gap-8">
+
+        <!-- Email Change Card -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-indigo-600 p-4">
+                <h2 class="text-xl font-semibold text-white flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Cambiar Correo Electrónico
+                </h2>
+            </div>
+
+            <div class="p-6">
+                <!-- Success Message -->
+                <div *ngIf="emailSuccess"
+                    class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert">
+                    <strong class="font-bold">¡Éxito!</strong>
+                    <span class="block sm:inline"> Tu correo electrónico ha sido actualizado correctamente.</span>
+                </div>
+
+                <form [formGroup]="emailForm" (ngSubmit)="onSubmitEmail()">
+                    <!-- Current Email -->
+                    <div class="mb-4">
+                        <label for="currentEmail" class="block text-sm font-medium text-gray-700 mb-1">Correo
+                            Electrónico Actual</label>
+                        <input type="email" id="currentEmail" formControlName="currentEmail"
+                            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100"
+                            readonly>
+                    </div>
+
+                    <!-- New Email -->
+                    <div class="mb-4">
+                        <label for="newEmail" class="block text-sm font-medium text-gray-700 mb-1">Nuevo Correo
+                            Electrónico</label>
+                        <input type="email" id="newEmail" formControlName="newEmail"
+                            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="Ingresa tu nuevo correo electrónico">
+                        <div *ngIf="emailForm.get('newEmail')?.touched && emailForm.get('newEmail')?.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            <div *ngIf="emailForm.get('newEmail')?.errors?.['required']">El correo electrónico es
+                                requerido.</div>
+                            <div *ngIf="emailForm.get('newEmail')?.errors?.['email']">Ingresa un correo electrónico
+                                válido.</div>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Email -->
+                    <div class="mb-6">
+                        <label for="confirmEmail" class="block text-sm font-medium text-gray-700 mb-1">Confirmar Correo
+                            Electrónico</label>
+                        <input type="email" id="confirmEmail" formControlName="confirmEmail"
+                            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="Confirma tu nuevo correo electrónico">
+                        <div *ngIf="emailForm.get('confirmEmail')?.touched && emailForm.get('confirmEmail')?.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            <div *ngIf="emailForm.get('confirmEmail')?.errors?.['required']">La confirmación del correo
+                                es requerida.</div>
+                            <div *ngIf="emailForm.get('confirmEmail')?.errors?.['email']">Ingresa un correo electrónico
+                                válido.</div>
+                        </div>
+                        <div *ngIf="emailForm.errors?.['emailsNotMatch'] && emailForm.get('confirmEmail')?.touched"
+                            class="text-red-500 text-sm mt-1">
+                            Los correos electrónicos no coinciden.
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Actualizar Correo Electrónico
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Password Change Card -->
+        <!-- Password Change Card -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-indigo-600 p-4">
+                <h2 class="text-xl font-semibold text-white flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Cambiar Contraseña
+                </h2>
+            </div>
+
+            <div class="p-6">
+                <!-- Success Message -->
+                <div *ngIf="passwordSuccess"
+                    class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+                    role="alert">
+                    <strong class="font-bold">¡Éxito!</strong>
+                    <span class="block sm:inline"> Tu contraseña ha sido actualizada correctamente.</span>
+                </div>
+
+                <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+                    <!-- New Password -->
+                    <div class="mb-4">
+                        <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-1">Nueva
+                            Contraseña</label>
+                        <div class="relative">
+                            <input [type]="showNewPassword ? 'text' : 'password'" id="newPassword"
+                                formControlName="newPassword"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                placeholder="Ingresa tu nueva contraseña">
+                            <button type="button"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600"
+                                (click)="togglePasswordVisibility('new')">
+                                <svg *ngIf="!showNewPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <svg *ngIf="showNewPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.878 9.878l4.242 4.242M3 3l3.59 3.59" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            <div *ngIf="passwordForm.get('newPassword')?.errors?.['required']">La nueva contraseña es
+                                requerida.</div>
+                            <div *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Debe tener al menos 6
+                                caracteres.</div>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-6">
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirmar
+                            Contraseña</label>
+                        <div class="relative">
+                            <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+                                formControlName="confirmPassword"
+                                class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                placeholder="Confirma tu nueva contraseña">
+                            <button type="button"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600"
+                                (click)="togglePasswordVisibility('confirm')">
+                                <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7" />
+                                </svg>
+                                <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div *ngIf="passwordForm.get('confirmPassword')?.touched && passwordForm.get('confirmPassword')?.invalid"
+                            class="text-red-500 text-sm mt-1">
+                            La confirmación es requerida.
+                        </div>
+                        <div *ngIf="passwordForm.errors?.['passwordsNotMatch'] && passwordForm.get('confirmPassword')?.touched"
+                            class="text-red-500 text-sm mt-1">
+                            Las contraseñas no coinciden.
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Actualizar Contraseña
+                    </button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+</div>
